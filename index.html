@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+
+<body>
+
+    <h1>Setting Text Content</h1>
+
+    <h2 id="01">Hello World!</h2>
+    <h2 id="02">Hello Sweden!</h2>
+
+    <table id="myTable" frame="box">
+    </table>
+
+    <input id="submit1" type="button" value="Submit" />
+    <p id="demo"></p>
+
+    <h2 id="03">Hello Sweden!</h2>
+    <p id="myParagraph">This is a test string with a {bold} text. Lets {see} if this works lol</p>
+
+    <input type="file" id="openFile" />
+    <br>
+    <textarea id="fileContents"></textarea>
+    <br>
+    <div id="text"></div>
+    <br>
+    <p>-------------------------------------------------------------------------------------------------------</p>
+    <br>
+    <div id="new_text"></div>
+    <br>
+    <p id="occurence"></p>
+    <br>
+    <p id="result"></p>
+    <!-- <iframe src='dfa.txt'  width = "800" height = "1000"></iframe> -->
+
+    <script>
+        function myFunction() {
+            var x = document.getElementById("TF[0][1]").value;
+            document.getElementById("demo").innerHTML = x;
+        }
+        document.getElementById("openFile").addEventListener('change', function() {
+            var fr = new FileReader();
+            fr.onload = function() {
+                document.getElementById("fileContents").textContent = this.reuslt;
+            }
+            fr.readAsText(this.files[0]);
+        });
+
+
+        $(document).ready(function() {
+            var lines = [];
+            var new_lines = [];
+
+            function myFunction() {
+                var x = document.getElementById("TF[0][1]").value;
+                document.getElementById("demo").innerHTML = x;
+            }
+            var myElement = $("#01");
+            myElement.text("Hello Sweden!");
+            // var x = new Array(10);
+
+            // for (var i = 0; i < x.length; i++) {
+            // x[i] = new Array(3);
+            // }
+
+            var x = 5;
+            // var states = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+            var states = ["0", "1", "2", "3", "4"];
+            var keys = ["A", "B"];
+            // var keys = ["P", "e", "n", "a", "g", "i", "z"];
+            // var final = ["6", "10"];
+            var final = ["4", "10"];
+            var table = [
+                //0, 1
+                ["1", "0"], //A
+                ["2", "0"], //B
+                ["2", "3"],
+                ["4", "0"],
+                ["4", "4"] //C
+            ];
+
+            var pats = ["AABA"];
+            // var pats = ["Penang", "Pizza"];
+
+            // var text = "AABA";
+            // var text_arr = text.split("");
+            // var current_char = 3;
+            // var state = "4";
+            // var len = 0;
+            // for (i = 3; i >= 0; i--) {
+
+            //     for (s = 0; s < states.length; s++) {
+            //         if (table[s][keys.indexOf(text_arr[i])] == state) {
+            //             console.log("inside table" + s.toString());
+            //             state = s.toString();
+            //             len = len + 1;
+            //             break;
+            //         }
+            //     }
+            //     if (state == "0") {
+            //         break;
+            //     }
+            //     console.log("len - " + len);
+
+            //     // console.log("inside for");
+            // }
+            // console.log(len);
+
+            // var x = 5;
+            // var states = ["0", "1", "2", "3", "4", "5"];
+            // var keys = ["P", "i", "z", "a"];
+            // var final = "5";
+            // var table = [
+            //     //0, 1
+            //     ["1", "0"], //A
+            //     ["2", "0"], //B
+            //     ["2", "3"],
+            //     ["4", "0"],
+            //     ["4", "4"] //C
+            // ];
+
+
+            // var strt = states[0];
+            // var string = "ABAABAAB";
+            // var str = string.split("");
+            // var initial
+            // for (i = 0; i < str.length; i++) {
+            //     strt = search(strt, str[i]);
+            // }
+            // if (strt == final) {
+            //     $("#03").text("True");
+            // } else {
+            //     $("#03").text("False");
+            // }
+
+
+            // function search(q, c) {
+            //     return table[states.indexOf(q)][keys.indexOf(c)];
+            // }
+            function search(q, c) {
+                // console.log(c.charCodeAt());
+                return TF[states.indexOf(q)][c.charCodeAt()];
+            }
+
+            // console.log(items[0][0]); // 1
+            // console.log(items[0][1]); // 2
+            // console.log(items[1][0]); // 3
+            // console.log(items[1][1]); // 4
+            // console.log(items);
+
+            //---------------------------------------------------------------------------------------------
+            var NO_OF_CHARS = 256;
+            var TF = new Array(states.length);
+            for (state = 0; state < states.length; state++) {
+                TF[state] = new Array(NO_OF_CHARS);
+                for (x = 0; x < NO_OF_CHARS; x++) {
+                    TF[state][x] = "0";
+                }
+            }
+
+
+            console.log(TF[0].join());
+            // expected output: "Fire,Air,Water"
+
+            function createTransition() {
+                var table = document.getElementById("myTable");
+                var thead = document.createElement("thead");
+                var tbody = document.createElement("tbody");
+
+                table.style.width = '100px';
+                table.style.border = '1px solid black';
+
+                //Create table header
+                var th = document.createElement("th");
+                th.appendChild(document.createTextNode("Q∑"));
+                thead.appendChild(th);
+                for (var i = 0; i < keys.length; i++) {
+                    var th = document.createElement("th");
+                    th.appendChild(document.createTextNode(keys[i]));
+                    thead.appendChild(th);
+                }
+                //Create table data
+                for (var i = 0; i < states.length; i++) {
+                    var row = document.createElement("tr");
+                    var cell = document.createElement("td");
+                    var cellText = document.createTextNode(states[i]);
+                    cell.appendChild(cellText);
+                    row.appendChild(cell);
+
+                    for (var j = 0; j < keys.length; j++) {
+                        var cell = document.createElement("td");
+                        var cellInput = document.createElement("input");
+                        cellInput.placeholder = "0";
+                        cellInput.setAttribute("type", "text");
+                        cellInput.id = 'TF[' + i + '][' + keys[j].charCodeAt() + ']';
+                        cell.append(cellInput);
+                        row.appendChild(cell);
+                    }
+
+                    tbody.appendChild(row);
+                }
+
+                table.appendChild(thead);
+                table.appendChild(tbody);
+
+                // for (var i = 0; i < 3; i++) {
+                //     var tr = tbl.insertRow();
+                //     for (var j = 0; j < 2; j++) {
+                //         if (i == 2 && j == 1) {
+                //             break;
+                //         } else {
+                //             var td = tr.insertCell();
+                //             td.appendChild(document.createTextNode('Cell'));
+                //             td.style.border = '1px solid black';
+                //             if (i == 1 && j == 1) {
+                //                 td.setAttribute('rowSpan', '2');
+                //             }
+                //         }
+                //     }
+                // }
+                // body.appendChild(tbl);
+            }
+            createTransition();
+
+            // var string = "ABAABBC";
+            // var str = string.split("");
+            // // var initial
+            // for (i = 0; i < str.length; i++) {
+            //     strt = search(strt, str[i]);
+            // }
+            // if (strt == final) {
+            //     $("#03").text("True");
+            // } else {
+            //     $("#03").text("False");
+            // }
+
+            // text = "first. second. third."
+            //     // text = text.replace(/\n/mg, "\n\n");
+            // terms = text.match(/^([^.]*\.[^.]*)\.(.*)$/);
+
+            // console.log(terms);
+
+            // words = " Mala dkk ll kd";
+            // word = words.split(" ");
+            // char = word.join(" ");
+
+            // console.log(char);
+
+            var result = [
+                [
+                    []
+                ]
+            ];
+            console.log("pats=" + pats[0])
+            var occur = {};
+            for (var i = 0; i < pats.length; i++) {
+                occur[pats[i]] = 0;
+            }
+            console.log("pats=" + occur["AABA"])
+
+            document.getElementById("openFile").addEventListener('change', function() {
+                var fr = new FileReader();
+                fr.onload = function() {
+                    // document.getElementById("fileContents").textContent = this.result;
+                    lines = this.result.replace(/\n\s*\n/g, '.').split('.');
+                    // var lines = this.result.match(/(.|[\n]){1,105}/g);
+                    // var lines = this.result.match(/\n\./g, ' ');
+                    // var lines = "a\nb,c,d.\n,e\nf".split(/[\n,]/);
+
+                    // document.getElementById("fileContents").textContent = lines.join("\n");
+
+                    result = new Array(lines.length);
+                    for (var line = 0; line < lines.length; line++) {
+                        result[line] = new Array(pats.length);
+                        for (p = 0; p < pats.length; p++) {
+                            result[line][p] = new Array(0);
+                        }
+                    }
+
+                    var text = document.getElementById("text");
+
+                    for (var line = 0; line < lines.length; line++) {
+                        if (line == lines.length - 1) {
+                            break;
+                        }
+                        if (lines[line].charAt(0) == " ") {
+                            var p = document.createElement("p");
+                            p.innerHTML = line + 1 + ":" + lines[line] + '.<br>';
+                            text.appendChild(p);
+                        } else if (lines[line].trim() === "") {
+                            var p = document.createElement("p");
+                            p.innerHTML = line + 1 + ":" + lines[line] + '<br>';
+                            text.appendChild(p);
+                        } else {
+                            var p = document.createElement("p");
+                            p.innerHTML = line + 1 + ": " + lines[line] + '.<br>';
+                            text.appendChild(p);
+                        }
+
+                        // if (line == lines.length - 1) {
+                        //     break;
+                        // }
+                        // if (lines[line].charAt(0) == " ") {
+                        //     document.getElementById("fileContents").append(line + 1 + ':' + lines[line] + '.\n');
+                        // } else if (lines[line].trim() === "") {
+                        //     document.getElementById("fileContents").append(line + 1 + ':' + lines[line] + '\n');
+                        // } else {
+                        //     document.getElementById("fileContents").append(line + 1 + ': ' + lines[line] + '.\n');
+                        // }
+
+                    }
+
+
+                }
+                fr.readAsText(this.files[0]);
+            });
+            // console.log(lines);
+            // var txt1 = "foo baz";
+            // var txt2 = txt1.slice(0, 4) + "bar" + txt1.slice(3);
+            // console.log(txt2);
+            // var string = "Welcome to geeksgeeks for geeks";
+            // var result = string.match(/eek/g);
+            // console.log(result);
+
+            // var re = /AABA/g,
+            //     str = "AABAABA";
+            // while ((match = re.exec(str)) != null) {
+            //     console.log("match found at " + match.index);
+            // }
+
+            // function bolderize(el) {
+            //     el.innerHTML = el.innerHTML.replace(/{([^}]+)}/gm, '<strong>$1</strong>')
+            // }
+            // bolderize(document.getElementById('myParagraph'))
+
+            var array = ["A", "B", "C"];
+            var ca = "A";
+            if (array.indexOf(ca) === -1) {
+                array.push(ca);
+                console.log(array);
+            }
+
+            $('#submit1').click(function() {
+                // console.log(lines);
+                for (i = 0; i < states.length; i++) {
+                    for (j = 0; j < keys.length; j++) {
+                        // TF[i][keys[j].charCodeAt()] = document.getElementById("TF[" + i + "][" + keys[j].charCodeAt() + "]").value;
+                        var next_states = document.getElementById("TF[" + i + "][" + keys[j].charCodeAt() + "]").value;
+                        if (next_states.length > 0) {
+                            next_states = next_states.split(',');
+                            for (s = 0; s < next_states.length; s++) {
+                                TF[i][keys[j].charCodeAt()] = next_states[s];
+                            }
+                        }
+                    }
+                    // console.log(TF[i])
+                }
+                // var x = document.getElementById("TF[0][65]").value;
+                // console.log(TF[0][64]);
+                // document.getElementById("demo").innerHTML = x;
+
+                // var strt = states[0];
+                for (var line = 0; line < lines.length; line++) {
+                    var words = lines[line].split(" ");
+                    if (words[0] === "") {
+                        console.log("remove empty");
+                        words.shift();
+                    }
+                    for (var word = 0; word < words.length; word++) {
+                        var strt = states[0];
+                        var chars = words[word].split("");
+                        // var indexs = [];
+                        // var len = 0;
+                        // var pattern = "";
+                        console.log('---------');
+                        console.log(chars.length);
+                        var patterns = [];
+                        for (i = 0; i < chars.length; i++) {
+                            console.log("Char=" + chars[i] + " , I =" + i);
+                            var previous = strt;
+                            var len = 0;
+                            strt = search(strt, chars[i]);
+                            // console.log("previous=" + previous);
+                            // console.log("strt=" + strt);
+
+                            if (final.includes(strt)) {
+                                var pattern = "";
+                                var ls = strt;
+                                // console.log(ls);
+                                for (var r = i; r >= 0; r--) {
+                                    console.log("for char -" + r + " char is = " + chars[r]);
+                                    for (q = 0; q < states.length; q++) {
+                                        if (TF[q][chars[r].charCodeAt()] == ls) {
+                                            // console.log("table-" + q);
+                                            ls = q.toString();
+                                            pattern = pattern + chars[r];
+                                            len = len + 1;
+                                            break;
+                                        }
+                                    }
+                                    if (ls == "0") {
+                                        break;
+                                    }
+
+                                }
+                                // console.log("Len=" + len.toString());
+                                var pattern = pattern.split("").reverse().join("");
+                                console.log("pattern=" + pattern);
+                                // var pattern = words[word].substring(i - len + 1, i + 1);
+                                var reg = new RegExp(pattern, "g");
+                                words[word] = words[word].replace(reg, pattern.bold());
+                                // if (patterns.indexOf(pattern) === -1) {
+                                //     patterns.push(pattern);
+                                // }
+                                console.log("wrod-" + words[word] + "at=" + word);
+                                console.log("pattern=" + pattern);
+                                var index = lines[line].indexOf(pattern);
+                                if (result[line][pats.indexOf(pattern)].indexOf(word + 1) === -1) {
+                                    result[line][pats.indexOf(pattern)].push(word + 1);
+                                }
+
+                                var see = result[line][pats.indexOf(pattern)].join(",");
+                                console.log("seee" + see);
+                                occur[pattern] = occur[pattern] + 1;
+                                console.log("occur:" + occur[pattern]);
+                            }
+                            // if (strt == final) {
+                            //     len = ++len;
+                            //     console.log("Final-Len=" + len.toString());
+                            //     var pattern = words[word].substring(i - len + 1, i + 1);
+                            //     if (patterns.indexOf(pattern) === -1) {
+                            //         patterns.push(pattern);
+                            //     }
+                            //     console.log("pattern=" + pattern);
+                            //     // words[word] = words[word].replace(pattern, pattern.bold());
+                            // } else if (previous < strt || (previous == strt && strt != 0)) {
+                            //     len = len + 1;
+                            // } else if (previous > strt && strt != 0) {
+                            //     len = 1;
+                            // } else {
+                            //     len = 0;
+                            // }
+                            // console.log("Len=" + len.toString());
+                        }
+                        console.log(patterns);
+                        // for (p = 0; p < patterns.length; p++) {
+                        //     var reg = new RegExp(patterns[p], "g");
+                        //     words[word] = words[word].replace(reg, patterns[p].bold());
+                        // }
+
+
+
+                        // if (strt == final) {
+                        //     words[word] = "<strong>" + words[word] + "</strong>"
+                        // }
+                    }
+                    var new_line = words.join(" ");
+                    new_lines.push(new_line);
+                    // lines[line] = new_line;
+                }
+
+                var new_text = document.getElementById("new_text");
+
+                for (var line = 0; line < new_lines.length; line++) {
+                    if (line == new_lines.length - 1) {
+                        break;
+                    }
+                    if (new_lines[line].charAt(0) == " ") {
+                        var p = document.createElement("p");
+                        p.innerHTML = line + 1 + ":" + new_lines[line] + '.<br>';
+                        new_text.appendChild(p);
+                    } else if (new_lines[line].trim() === "") {
+                        var p = document.createElement("p");
+                        p.innerHTML = line + 1 + ":" + new_lines[line] + '<br>';
+                        new_text.appendChild(p);
+                    } else {
+                        var p = document.createElement("p");
+                        p.innerHTML = line + 1 + ": " + new_lines[line] + '.<br>';
+                        new_text.appendChild(p);
+                    }
+                }
+                if (result[0][0].length > 0) {
+                    console.log("gigger");
+                }
+
+                var text = "";
+                for (var key in occur) {
+                    text += "<br>" + key + ": " + occur[key] + " founds";
+                }
+                document.getElementById("occurence").innerHTML = text;
+
+                var text = "";
+                for (var p = 0; p < pats.length; p++) {
+                    console.log("P=" + p);
+                    // if (occur[pats[p]] > 0) {
+                    console.log("pattern=" + pats[p]);
+                    text += "<br>" + pats[p] + " is found at position:";
+                    for (var line = 0; line < lines.length; line++) {
+                        if (result[line][p].length > 0) {
+                            text += "<br> line-" + line + " and index-" + result[line][p].join(",");
+                        }
+
+                    }
+                    // }
+
+                }
+                document.getElementById("result").innerHTML = text;
+
+                // console.log(lines);
+            });
+
+        });
+    </script>
+
+</body>
+
+</html>

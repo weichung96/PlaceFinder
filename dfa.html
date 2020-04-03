@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <!-- Fontaswesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <title>Assignment 1 - DFA</title>
+
+    <style>
+        html,
+        body {
+            height: 100%;
+            font-size: 22px;
+        }
+        
+        .container-fluid {
+            height: 100%;
+            font-size: 18px;
+        }
+        
+        .row {
+            height: 100%;
+        }
+        
+        .form-control {
+            padding: 0.1rem .75rem;
+            height: calc(1.5em + .3rem + 2px);
+        }
+        
+        .col-form-label {
+            line-height: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Hello, world!</h1>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand">Place Finder</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" id="navCollapseBut">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto"></ul>
+            <button class="btn btn-success float-right mr-2" type="button" onclick="runDFA()">Run <i class="fa fa-play"></i></button>
+            <button class="btn btn-primary float-right" onClick="window.location.reload();">Clear</button>
+            </ul>
+        </div>
+
+    </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-6 border-right border-secondary wrapper" style="padding:20px;">
+                <form>
+                    <div class="form-group">
+                        <h5 class="font-weight-bold">DFA Setting</h5>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputPassword" class="col-sm-2 col-form-label">Patterns/Places:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="patterns" placeholder="E.g. Malaysia, Australia, Penang, Pizza Hut, Intel etc." onchange="createAlphabet()">
+                            <small>Seperate multiple patterns or places by comma (",")</small>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputPassword" class="col-sm-2 col-form-label">State:</label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" id="states" placeholder="E.g. 0,1,2,..." onchange="createTable()">
+                            <small>Seperate multiple values by comma (",")</small>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputPassword" class="col-sm-2 col-form-label">Alphabet:</label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" id="alphabets" placeholder="E.g. A,B,C,..." onchange="createTable()">
+                            <small>Seperate multiple values by comma (",")</small>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputPassword" class="col-sm-2 col-form-label">Initial State:</label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" id="initial_state" placeholder="E.g. 0">
+                            <!-- <small>Seperate multiple values by comma (",")</small> -->
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputPassword" class="col-sm-2 col-form-label">Final State:</label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" id="final_state" placeholder="E.g. 0">
+                            <small>Seperate multiple values by comma (",")</small>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Transition:</label>
+                        <table class="table table-responsive" id="transition_table">
+
+                        </table>
+                    </div>
+                </form>
+                <form>
+                    <div class="form-group">
+                        <h5 class="font-weight-bold">Inputs</h5>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputPassword" class="col-sm-2 col-form-label">Text file:</label>
+                        <div class="col-sm-5">
+                            <input type="file" id="openFile" />
+                        </div>
+                        <div id='text' style='padding:15px;'></div>
+                    </div>
+                </form>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-lg-6" style="padding:20px">
+                <!-- <iframe><iframe frameborder="0" height="400" width="100%"></iframe></p>
+                 -->
+
+                <h5 class="font-weight-bold" id="result">Result</h5>
+                <div class="form-group" id="needle"></div>
+                <div class="form-group" id="label" style="display: none;"><strong>The text (haystack): </strong></div>
+                <div id="haystack"></div>
+                <div id="occurence"></div>
+                <br>
+                <div id="position"></div>
+                <div id="demostration"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="dfa.js"></script>
+</body>
+
+</html>
