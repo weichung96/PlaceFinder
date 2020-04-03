@@ -6,22 +6,31 @@ var NO_OF_CHARS = 256;
 var TF = new Array();
 var patterns = [];
 var lines = [];
+var Uppercases = [];
 
 function createAlphabet() {
     if (alphabets.length > 0) {
         alphabets = [];
     }
+    Uppercases = [];
 
     var strings = document.getElementById("patterns").value.split(",");
 
     for (str = 0; str < strings.length; str++) {
         var chars = strings[str].split("");
         for (char = 0; char < chars.length; char++) {
+            if (chars[char].match(/[A-Z]/g)) {
+                if (Uppercases.indexOf(chars[char]) === -1) {
+                    Uppercases.push(chars[char]);
+                }
+            }
             if (alphabets.indexOf(chars[char]) === -1) {
                 alphabets.push(chars[char]);
             }
         }
     }
+
+    console.log(Uppercases);
 
     document.getElementById("alphabets").value = alphabets;
     createTable();
@@ -35,12 +44,19 @@ function createTable() {
     }
 
     alphabets = document.getElementById("alphabets").value.split(",");
-    console.log(alphabets);
 
     for (state = 0; state < states.length; state++) {
         TF[state] = new Array(NO_OF_CHARS);
         for (x = 0; x < NO_OF_CHARS; x++) {
-            TF[state][x] = "0";
+            var letter = String.fromCharCode(x);
+            if (Uppercases.includes(letter)) {
+                console.log("letter = " + letter);
+                var value = Uppercases.indexOf(letter) + 1;
+                TF[state][x] = value.toString();
+                console.log("TF = " + TF[state][x]);
+            } else {
+                TF[state][x] = "0";
+            }
         }
     }
 
@@ -77,7 +93,7 @@ function createTable() {
         for (var j = 0; j < alphabets.length; j++) {
             var cell = document.createElement("td");
             var cellInput = document.createElement("input");
-            cellInput.placeholder = "0";
+            cellInput.value = TF[i][alphabets[j].charCodeAt()];
             cellInput.size = 1;
             cellInput.setAttribute("type", "text");
             cellInput.id = 'TF[' + i + '][' + alphabets[j].charCodeAt() + ']';
@@ -241,7 +257,7 @@ function runDFA() {
 
         for (p = 0; p < substrings.length; p++) {
             var reg = new RegExp(substrings[p], "g");
-            lines[line] = lines[line].replace(reg, substrings[p].bold());
+            lines[line] = lines[line].replace(reg, "<mark>" + substrings[p] + "</mark>");
         }
     }
 
