@@ -17,20 +17,25 @@ function createAlphabet() {
     var strings = document.getElementById("patterns").value.split(",");
 
     for (str = 0; str < strings.length; str++) {
+        if (strings[str].match(/[A-Z]/)) {
+            if (Uppercases.indexOf(strings[str][0]) === -1) {
+                Uppercases.push(strings[str][0]);
+            }
+        }
         var chars = strings[str].split("");
         for (char = 0; char < chars.length; char++) {
-            if (chars[char].match(/[A-Z]/g)) {
-                if (Uppercases.indexOf(chars[char]) === -1) {
-                    Uppercases.push(chars[char]);
-                }
-            }
+            // if (chars[char].match(/[A-Z]/g)) {
+            //     if (Uppercases.indexOf(chars[char]) === -1) {
+            //         Uppercases.push(chars[char]);
+            //     }
+            // }
             if (alphabets.indexOf(chars[char]) === -1) {
                 alphabets.push(chars[char]);
             }
         }
     }
 
-    console.log(Uppercases);
+    // console.log(Uppercases);
 
     document.getElementById("alphabets").value = alphabets;
     createTable();
@@ -181,7 +186,7 @@ function runDFA() {
         // }
         var chars = lines[line].split("");
 
-        var search_state = initial;
+        var current_state = initial;
 
         var transition = "0";
         var substrings = [];
@@ -192,12 +197,12 @@ function runDFA() {
         // var patterns = [];
         for (i = 0; i < chars.length; i++) {
 
-            search_state = search(search_state, chars[i]);
+            var next_state = search(current_state, chars[i]);
             console.log("Char=" + chars[i] + " , I =" + i);
-            console.log("state = " + search_state);
-            var pattern = "";
-            var reverse_state = search_state;
-            if (final.includes(search_state)) {
+
+            if (final.includes(next_state) && (next_state != current_state)) {
+                var pattern = "";
+                var reverse_state = next_state;
                 for (var r = i; r >= 0; r--) {
                     for (q = 0; q < states.length; q++) {
                         if (TF[q][chars[r].charCodeAt()] == reverse_state) {
@@ -243,8 +248,16 @@ function runDFA() {
                     substrings.push(pattern);
                 }
                 status = "Accepted";
+
+                transition += "-->" + next_state;
+                current_state = next_state;
+                // next_state = initial;
+            } else {
+                transition += "-->" + next_state;
+                current_state = next_state;
             }
-            transition += "-->" + search_state;
+            console.log("Previous = " + current_state);
+            console.log("Next = " + next_state);
         }
 
         demo_text += "<br><strong>Transition:</strong> " + transition;
