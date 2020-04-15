@@ -1,2 +1,2 @@
 # PlaceFinder
-Find place using Deterministic Finite Automata (DFA)
+Find place using Deterministic Finite Automaton (DFA)
