@@ -1,46 +1,106 @@
+var patterns = [];
 var states = [];
 var alphabets = [];
 var initial = "0";
 var final = [];
-var NO_OF_CHARS = 256;
 var TF = new Array();
-var patterns = [];
+var ascii_codes = 256;
 var lines = [];
-var Uppercases = [];
 
+defaultSetting();
+
+function defaultSetting() { //This function is used to define DFA by default to 
+    patterns = ["Malaysia", "Australia", "Penang", "Pizza Hut", "Intel"];
+    states = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34"];
+    alphabets = ["M", "a", "l", "y", "s", "i", "A", "u", "t", "r", "P", "e", "n", "g", "z", " ", "H", "I"];
+    initial = "0";
+    final = ["17", "22", "30", "34"];
+
+    document.getElementById("patterns").value = patterns.join(',');
+    document.getElementById("states").value = states.join(',');
+    document.getElementById("alphabets").value = alphabets.join(',');
+    document.getElementById("initial_state").value = initial;
+    document.getElementById("final_state").value = final.join(',');
+
+    //Initialize Transition Array 
+    var Uppercases = ["M", "A", "P", "I"];
+    for (state = 0; state < states.length; state++) {
+        TF[state] = new Array(ascii_codes);
+        for (x = 0; x < ascii_codes; x++) {
+            var letter = String.fromCharCode(x);
+            if (Uppercases.includes(letter)) {
+                var value = Uppercases.indexOf(letter) + 1;
+                TF[state][x] = value.toString();
+            } else {
+                TF[state][x] = "0";
+            }
+        }
+    }
+
+    //Define transition function in 2D array
+    TF[1][97] = "5"; // 1->5 if "a"
+    TF[2][117] = "10"; // 2->10 if "u"
+    TF[3][105] = "23"; // 3->23 if "i"
+    TF[3][101] = "18"; // 3->18 if "e"
+    TF[4][110] = "31"; // 4->31 if "n"
+    TF[5][108] = "6"; // 5->6 if "l"
+    TF[6][97] = "7"; // 6->7 if "a"
+    TF[7][121] = "8"; // 7->8 if "y"
+    TF[8][115] = "9"; // 8->9 if "s"
+    TF[9][105] = "16"; // 9->16 if "i"
+    TF[10][115] = "11"; // 10->11 if "s"
+    TF[11][116] = "12"; // 11->12 if "t"
+    TF[12][114] = "13"; // 12->13 if "r"
+    TF[13][97] = "14"; // 13->14 if "a"
+    TF[14][108] = "15"; // 14->15 if "l"
+    TF[15][105] = "16"; // 15->16 if "i"
+    TF[16][97] = "17"; // 16->17 if "a"
+    TF[18][110] = "19"; // 18->19 if "n"
+    TF[19][97] = "20"; // 19->20 if "a"
+    TF[20][110] = "21"; // 20->21 if "n"
+    TF[21][103] = "22"; // 21->22 if "g"
+    TF[23][122] = "24"; // 23->24 if "z"
+    TF[24][122] = "25"; // 24->25 if "z"
+    TF[25][97] = "26"; // 25->26 if "a"
+    TF[26][32] = "27"; // 26->27 if "space"
+    TF[27][72] = "28"; // 27->28 if "H"
+    TF[28][117] = "29"; // 28->29 if "u"
+    TF[29][116] = "30"; // 29->30 if "t"
+    TF[31][116] = "32"; // 31->32 if "n"
+    TF[32][101] = "33"; // 32->33 if "e"
+    TF[33][108] = "34"; // 33->34 if "l"
+
+    for (i = 0; i < final.length; i++) {
+        for (x = 0; x < ascii_codes; x++) {
+            TF[final[i]][x] = final[i];
+        }
+    }
+
+    displayTable(); //This is just a function to display transition table in Html
+}
+
+//This function is used to create finite set of input symbol exist from the strings or patterns 
 function createAlphabet() {
     if (alphabets.length > 0) {
         alphabets = [];
     }
-    Uppercases = [];
 
     var strings = document.getElementById("patterns").value.split(",");
 
     for (str = 0; str < strings.length; str++) {
-        if (strings[str].match(/[A-Z]/)) {
-            if (Uppercases.indexOf(strings[str][0]) === -1) {
-                Uppercases.push(strings[str][0]);
-            }
-        }
         var chars = strings[str].split("");
         for (char = 0; char < chars.length; char++) {
-            // if (chars[char].match(/[A-Z]/g)) {
-            //     if (Uppercases.indexOf(chars[char]) === -1) {
-            //         Uppercases.push(chars[char]);
-            //     }
-            // }
             if (alphabets.indexOf(chars[char]) === -1) {
                 alphabets.push(chars[char]);
             }
         }
     }
 
-    // console.log(Uppercases);
-
     document.getElementById("alphabets").value = alphabets;
     createTable();
 }
 
+//This function is used to recreate transition table when input setting of string, states and symbols is changed.
 function createTable() {
     states = document.getElementById("states").value.split(",");
     if (states.length > 0) {
@@ -50,23 +110,20 @@ function createTable() {
 
     alphabets = document.getElementById("alphabets").value.split(",");
 
+    //Re-initialize the transition array that move from states back to state "0" for every symbols in ascii table
     for (state = 0; state < states.length; state++) {
-        TF[state] = new Array(NO_OF_CHARS);
-        for (x = 0; x < NO_OF_CHARS; x++) {
-            var letter = String.fromCharCode(x);
-            if (Uppercases.includes(letter)) {
-                console.log("letter = " + letter);
-                var value = Uppercases.indexOf(letter) + 1;
-                TF[state][x] = value.toString();
-                console.log("TF = " + TF[state][x]);
-            } else {
-                TF[state][x] = "0";
-            }
+        TF[state] = new Array(ascii_codes);
+        for (x = 0; x < ascii_codes; x++) {
+            TF[state][x] = "0";
         }
     }
 
+    displayTable(); //This is just a function to display transition table in Html
+}
+
+//This is just a function to display transition table in Html
+function displayTable() {
     var table = document.getElementById("transition_table");
-    console.log(table);
     while (table.hasChildNodes()) {
         table.removeChild(table.childNodes[0]);
     }
@@ -108,11 +165,11 @@ function createTable() {
 
         tbody.appendChild(row);
     }
-
     table.append(thead);
     table.append(tbody);
 }
 
+//Read text file
 document.getElementById("openFile").addEventListener('change', function() {
     var fr = new FileReader();
     fr.onload = function() {
@@ -123,6 +180,7 @@ document.getElementById("openFile").addEventListener('change', function() {
     fr.readAsText(this.files[0]);
 });
 
+//Search in transition function (TF) array to find next state by given current state and symbol 
 function search(state, character) {
     return TF[states.indexOf(state)][character.charCodeAt()];
 }
@@ -148,11 +206,12 @@ function runDFA() {
     patterns = document.getElementById("patterns").value.split(",");
     var needle = document.getElementById("patterns").value;
     $('#needle').html('<strong>The pattern (needle): </strong>' + needle);
-    console.log(patterns);
+
+    //For occurance count
     for (var i = 0; i < patterns.length; i++) {
         occurrences[patterns[i]] = 0;
     }
-
+    //For position
     result = new Array(lines.length);
     for (var line = 0; line < lines.length; line++) {
         result[line] = new Array(patterns.length);
@@ -161,11 +220,11 @@ function runDFA() {
         }
     }
 
+    //create transition function from user inputs
     for (i = 0; i < states.length; i++) {
         for (j = 0; j < alphabets.length; j++) {
-            // TF[i][keys[j].charCodeAt()] = document.getElementById("TF[" + i + "][" + keys[j].charCodeAt() + "]").value;
             var next_states = document.getElementById("TF[" + i + "][" + alphabets[j].charCodeAt() + "]").value;
-            if (next_states.length > 0) {
+            if (next_states.length > 0) { //There might be more than one next state for different symbols
                 next_states = next_states.split(',');
                 for (s = 0; s < next_states.length; s++) {
                     TF[i][alphabets[j].charCodeAt()] = next_states[s];
@@ -180,30 +239,24 @@ function runDFA() {
     for (var line = 0; line < lines.length; line++) {
         lines[line] = lines[line].trim();
         lines[line] = lines[line].replace(/ +(?= )/g, '');
-        // var words = lines[line].split(" ");
-        // if (words[0] === "") {
-        //     words.shift();
-        // }
+
         var chars = lines[line].split("");
 
         var current_state = initial;
 
+        //This 4 variables are used for demonstration's part
         var transition = "0";
         var substrings = [];
         var haystack = lines[line];
         var status = "Rejected";
-        console.log('----------------------------------');
 
-        // var patterns = [];
-        for (i = 0; i < chars.length; i++) {
-
+        for (i = 0; i < chars.length; i++) { //process one character at a time
             var next_state = search(current_state, chars[i]);
-            console.log("Char=" + chars[i] + " , I =" + i);
 
             if (final.includes(next_state) && (next_state != current_state)) {
                 var pattern = "";
                 var reverse_state = next_state;
-                for (var r = i; r >= 0; r--) {
+                for (var r = i; r >= 0; r--) { //This for loop is just used to make bold of substring found
                     for (q = 0; q < states.length; q++) {
                         if (TF[q][chars[r].charCodeAt()] == reverse_state) {
                             var colIndex = 0;
@@ -214,72 +267,66 @@ function runDFA() {
                                     return true;
                                 }
                             });
-                            if (q.toString() == "0") {
-                                reverse_state = q.toString();
-                                pattern = chars[r] + pattern;
-                                break;
-                            } else if (colIndex.toString() == chars[(r - 1)].charCodeAt()) {
+                            if (q.toString() == "0" || colIndex.toString() == chars[(r - 1)].charCodeAt()) {
                                 reverse_state = q.toString();
                                 pattern = chars[r] + pattern;
                                 break;
                             }
                         }
                     }
-                    console.log("reverse_STATE + CHAR =" + pattern + "   &    " + reverse_state);
                     if (reverse_state == "0") {
                         break;
                     }
-                    // if (patterns.includes(pattern)) {
-                    //     break;
-                    // }
                 }
-                // pattern = pattern.split("").reverse().join("");
-                // var reg = new RegExp(pattern, "g");
-                // words[word] = words[word].replace(reg, pattern.bold());
 
+                //For position
                 var index = i - pattern.length + 1;
                 if (result[line][patterns.indexOf(pattern)].indexOf(index) === -1) {
                     result[line][patterns.indexOf(pattern)].push(index);
                 }
 
+                //For occurrence count
                 occurrences[pattern] = occurrences[pattern] + 1;
 
+                //For demostration's part
                 if (substrings.indexOf(pattern) === -1) {
                     substrings.push(pattern);
                 }
                 status = "Accepted";
 
                 transition += "-->" + next_state;
-                current_state = next_state;
-                // next_state = initial;
+                // current_state = next_state;
+                current_state = "0";
             } else {
                 transition += "-->" + next_state;
                 current_state = next_state;
             }
-            console.log("Previous = " + current_state);
-            console.log("Next = " + next_state);
         }
 
-        demo_text += "<br><strong>Transition:</strong> " + transition;
-        demo_text += "<br><strong>Needles:</strong> " + patterns.join(",");
-        demo_text += "<br><strong>Haystack:</strong> " + haystack;
-        demo_text += "<br><strong>Status:</strong> " + status + "<br>";
-        if (substrings.length > 0) {
-            demo_text += "<strong>Substring found:</strong> " + substrings.join(",") + "<br>";
-        }
+        if (chars.length > 0) {
+            demo_text += "<br><strong>Transition:</strong> " + transition;
+            demo_text += "<br><strong>Needles:</strong> " + patterns.join(",");
+            demo_text += "<br><strong>Haystack:</strong> " + haystack + ".";
+            demo_text += "<br><strong>Status:</strong> " + status + "<br>";
+            if (substrings.length > 0) {
+                demo_text += "<strong>Substring found:</strong> " + substrings.join(",") + "<br>";
+            }
 
-        for (p = 0; p < substrings.length; p++) {
-            var reg = new RegExp(substrings[p], "g");
-            lines[line] = lines[line].replace(reg, "<mark>" + substrings[p] + "</mark>");
+            for (p = 0; p < substrings.length; p++) {
+                var reg = new RegExp(substrings[p], "g");
+                lines[line] = lines[line].replace(reg, "<mark>" + substrings[p] + "</mark>");
+            }
         }
     }
 
     demo.innerHTML = demo_text;
 
-    $("#label").show();
-
     var new_text = document.getElementById("haystack");
+    var p = document.createElement("P");
+    p.innerHTML = "<strong>The text (haystack): </strong><br>";
+    new_text.appendChild(p);
 
+    //This part is to print text with substrings hightlighted in line by line
     for (var line = 0; line < lines.length; line++) {
         if (line == lines.length - 1) {
             break;
@@ -299,12 +346,14 @@ function runDFA() {
         }
     }
 
+    //This part prints the count of occurrence for each substring
     var occurence_text = "<h5 style='color:blue;'><strong>Occurences</strong></h5>";
     for (var key in occurrences) {
         occurence_text += key + " : " + occurrences[key] + " founds<br>";
     }
     document.getElementById("occurence").innerHTML = occurence_text;
 
+    //This part prints the position of each substring found
     var position_text = "<h5 style='color:blue;'><strong>Position</strong></h5>";
     for (var p = 0; p < patterns.length; p++) {
 

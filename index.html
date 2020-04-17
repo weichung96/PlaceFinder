@@ -17,14 +17,14 @@
         html,
         body {
             height: auto;
-            font-size: 16px;
+            font-size: 17px;
             color: black;
             font-weight: 400;
         }
         
         body .container-fluid {
             height: auto;
-            font-size: 16px;
+            font-size: 17px;
             color: black;
             font-weight: 400;
         }
@@ -35,11 +35,11 @@
         }
         
         .col-form-label {
-            font-size: 16px!important;
+            font-size: 17px!important;
         }
         
         input {
-            font-size: 16px!important;
+            font-size: 17px!important;
         }
         /* .container-fluid {
             height: 100%;
@@ -97,42 +97,42 @@
                         <h4 class="font-weight-bold">DFA Setting</h4>
                     </div>
                     <div class="form-group row">
-                        <label for="inputPassword" class="col-sm-2 col-form-label">Patterns/Places:</label>
+                        <label for="inputPassword" class="col-sm-3 col-form-label">Strings/Patterns/Places:</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="patterns" placeholder="E.g. Malaysia, Australia, Penang, Pizza Hut, Intel etc." onchange="createAlphabet()">
-                            <small>Seperate multiple patterns or places by comma (",")</small>
+                            <small>Separate multiple patterns or places by comma (",")</small>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="inputPassword" class="col-sm-2 col-form-label">State:</label>
-                        <div class="col-sm-5">
+                        <label for="inputPassword" class="col-sm-3 col-form-label">State:</label>
+                        <div class="col-sm-8">
                             <input type="text" class="form-control" id="states" placeholder="E.g. 0,1,2,..." onchange="createTable()">
-                            <small>Seperate multiple values by comma (",")</small>
+                            <small>Separate multiple values by comma (",")</small>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="inputPassword" class="col-sm-2 col-form-label">Alphabet:</label>
-                        <div class="col-sm-5">
+                        <label for="inputPassword" class="col-sm-3 col-form-label">Alphabet:</label>
+                        <div class="col-sm-8">
                             <input type="text" class="form-control" id="alphabets" placeholder="E.g. A,B,C,..." onchange="createTable()">
-                            <small>Seperate multiple values by comma (",")</small>
+                            <small>Separate multiple values by comma (",")</small>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="inputPassword" class="col-sm-2 col-form-label">Initial State:</label>
-                        <div class="col-sm-5">
+                        <label for="inputPassword" class="col-sm-3 col-form-label">Initial State:</label>
+                        <div class="col-sm-8">
                             <input type="text" class="form-control" id="initial_state" placeholder="E.g. 0">
                             <!-- <small>Seperate multiple values by comma (",")</small> -->
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="inputPassword" class="col-sm-2 col-form-label">Final State:</label>
-                        <div class="col-sm-5">
+                        <label for="inputPassword" class="col-sm-3 col-form-label">Final State:</label>
+                        <div class="col-sm-8">
                             <input type="text" class="form-control" id="final_state" placeholder="E.g. 0">
-                            <small>Seperate multiple values by comma (",")</small>
+                            <small>Separate multiple values by comma (",")</small>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="exampleInputEmail1" class="col-sm-2 col-form-label">Transition:</label>
+                        <label for="exampleInputEmail1" class="col-sm-3 col-form-label mb-1">Transition Function:</label>
                         <table class="table table-responsive" id="transition_table" style="padding-left: 15px;margin-right: 20px;">
                         </table>
                     </div>
@@ -157,7 +157,6 @@
 
                 <h4 class="font-weight-bold" id="result">Result</h4>
                 <div class="form-group" id="needle"></div>
-                <div class="form-group" id="label" style="display: none;"><strong>The text (haystack): </strong></div>
                 <div id="haystack"></div>
                 <div id="occurence"></div>
                 <br>
