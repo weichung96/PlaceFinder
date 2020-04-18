@@ -1,4 +1,4 @@
-# PlaceFinder
+# Place Finder - DFA
 Find place names from text using Deterministic Finite Automaton (DFA).
 - Place names can be name of country, states, organization and shop.
 - For example, Malaysia, Australia, Penang, Pizza Hut and Intel.
