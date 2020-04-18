@@ -387,7 +387,6 @@ function clear_input() {
     document.getElementById("openFile").value = "";
     document.getElementById("text").innerHTML = "";
 
-
     $('#needle').html("");
     $('#haystack').html("");
     $('#occurence').html("");
