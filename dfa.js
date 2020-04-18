@@ -372,3 +372,25 @@ function runDFA() {
     document.getElementById("position").innerHTML = position_text;
 
 }
+
+//Clear input and result to re-define new DFA
+function clear_input() {
+    document.getElementById("patterns").value = "";
+    document.getElementById("states").value = "";
+    document.getElementById("alphabets").value = "";
+    document.getElementById("initial_state").value = "";
+    document.getElementById("final_state").value = "";
+
+    table = document.getElementById("transition_table");
+    table.innerHTML = "";
+
+    document.getElementById("openFile").value = "";
+    document.getElementById("text").innerHTML = "";
+
+
+    $('#needle').html("");
+    $('#haystack').html("");
+    $('#occurence').html("");
+    $('#position').html("");
+    $('#demostration').html("");
+}

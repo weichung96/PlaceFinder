@@ -84,14 +84,14 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mr-auto"></ul>
             <button class="btn btn-success float-right mr-2" type="button" onclick="runDFA()">Run <i class="fa fa-play"></i></button>
-            <button class="btn btn-primary float-right" onClick="window.location.reload();">Clear</button>
+            <button class="btn btn-primary float-right" type="button" onclick="clear_input()">Clear</button>
             </ul>
         </div>
 
     </nav>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-lg-6 border-right border-secondary" style="padding:20px;height:100%;">
+            <div class="col-lg-6 border-right border-secondary" style="padding:20px;">
                 <form>
                     <div class="form-group">
                         <h4 class="font-weight-bold">DFA Setting</h4>
@@ -151,7 +151,7 @@
                 </form>
             </div>
             <div class="clearfix"></div>
-            <div class="col-lg-6" style="padding:20px">
+            <div class="col-lg-6 border-left" style="padding:20px">
                 <!-- <iframe><iframe frameborder="0" height="400" width="100%"></iframe></p>
                  -->
 
