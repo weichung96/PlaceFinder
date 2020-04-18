@@ -253,7 +253,7 @@ function runDFA() {
         for (i = 0; i < chars.length; i++) { //process one character at a time
             var next_state = search(current_state, chars[i]);
 
-            if (final.includes(next_state) && (next_state != current_state)) {
+            if (final.includes(next_state)) {
                 var pattern = "";
                 var reverse_state = next_state;
                 for (var r = i; r >= 0; r--) { //This for loop is just used to make bold of substring found
